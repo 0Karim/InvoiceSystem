@@ -1,0 +1,175 @@
+﻿@model InvoiceSystem.Infrastructure.ViewModel.InvoiceViewModel
+@{
+    ViewData["Title"] = "CreateNewInvoice";
+}
+
+@*Modal For Invoice Items*@
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="InvoiceItemsModal" aria-labelledby="addContactLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Invoice Items</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="InvoiceItemsDiv">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<form method="post" data-ajax="true" data-ajax-method="post"
+      asp-controller="Invoice" asp-action="AddNewInvoice" data-ajax-success="onSuccessInvoice" data-ajax-failure="onFailInvoice">
+
+    <div class="form-group row">
+        <label asp-for="@Model.InvoiceNo" class="col-sm-2 col-form-label">Invoice No</label>
+        <div class="col-sm-10">
+            <input type="text" asp-for="@Model.InvoiceNo" class="form-control" value="@Model.InvoiceNo" placeholder="Invoice No">
+            <span asp-validation-for="@Model.InvoiceNo" class="text-danger" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="@Model.InvoiceDate" class="col-sm-2 col-form-label">Invoice Date</label>
+        <div class="col-sm-10">
+            <input type="date" asp-for="@Model.InvoiceDate" class="form-control" value="@Model.InvoiceDate" placeholder="Invoice Date">
+            <span asp-validation-for="@Model.InvoiceDate" class="text-danger" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="@Model.StoreId" class="col-sm-2 col-form-label">Store</label>
+        <div class="col-sm-10">
+            <select asp-for="@Model.StoreId" class="form-control" asp-items="@(new SelectList(ViewBag.StoresList , "Id" , "StoreName"))">
+                <option value="">Choose</option>
+            </select>
+            <span asp-validation-for="@Model.StoreId" class="text-danger" />
+        </div>
+    </div>
+
+    <br />
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#InvoiceItemsModal" onclick="AddNewInvoiceItems()">Add</button>
+
+    <br />
+
+    <table class="table table-responsive table-bordered table-striped" id="invoiceItemsTable">
+        <thead>
+            <tr>
+                <th>ItemName</th>
+                <th>Unit</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Discount</th>
+                <th>Net</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <br />
+
+    <div class="form-group row">
+        <label asp-for="@Model.TotalPrice" class="col-sm-2 col-form-label">Total</label>
+        <div class="col-sm-4">
+            <input type="text" asp-for="@Model.TotalPrice" class="form-control" value="@Model.TotalPrice" placeholder="Total Price">
+            <span asp-validation-for="@Model.TotalPrice" class="text-danger" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="@Model.NetPriceTotal" class="col-sm-2 col-form-label">Net Price</label>
+        <div class="col-sm-4">
+            <input type="text" asp-for="@Model.NetPriceTotal" class="form-control" value="@Model.NetPriceTotal" placeholder="Net Price">
+            <span asp-validation-for="@Model.NetPriceTotal" class="text-danger" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Invoice</button>
+    <button type="button" class="btn btn-danger">Delete</button>
+
+
+</form>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(function () {
+        InvoiceItemsDT();
+    });
+
+
+    function InvoiceItemsDT()
+    {
+        debugger;
+        $('#invoiceItemsTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "Paginate": true,
+            "filter": false,
+            "autoWidth": false,
+            "orderMulti": false,
+            //"bPaginate": false,
+            "bLengthChange": false,
+            "bInfo": false,
+            "ajax": {
+                "url": '../Invoice/LoadAllInvoiceItems',
+                "type": "POST",
+                "datatype": "json",
+            },
+            "columnDefs": [
+                
+            ],
+            "columns": [
+                { "data": "itemName", "name": "itemName", "autoWidth": true },
+                { "data": "unit", "name": "unit", "autoWidth": true },
+                { "data": "price", "name": "price", "autoWidth": true },
+                { "data": "itemQty", "name": "itemQty", "autoWidth": true },
+                { "data": "total", "name": "total", "autoWidth": true },
+                { "data": "discount", "name": "discount", "autoWidth": true },
+                { "data": "net", "name": "net", "autoWidth": true },
+            ],
+        });
+    }
+
+    function AddNewInvoiceItems()
+    {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("AddNewInvoiceItemForm" , "Invoice")',
+            dataType: "html",
+
+            success: function (response) {
+                console.log(response);
+                $('#InvoiceItemsDiv').html(response);
+            },
+            error: function () {
+                alert('Fail');
+            }
+        })
+    }
+
+    function onSuccess() {
+        alert('success');
+    }
+
+    function onFail() {
+        alert('Fail');
+    }
+
+    function onSuccessInvoice() {
+        alert('success');
+
+    }
+
+    function onFailInvoice() {
+        alert('Fail');
+    }
+
+</script>

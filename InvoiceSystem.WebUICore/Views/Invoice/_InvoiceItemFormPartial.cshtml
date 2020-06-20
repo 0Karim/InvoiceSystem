@@ -1,0 +1,59 @@
+﻿@model InvoiceSystem.Infrastructure.ViewModel.InvoiceItemsViewModel
+
+
+<form class="form-inline" method="post" data-ajax="true" data-ajax-method="post"
+      asp-controller="Invoice" asp-action="AddNewInvoiceItem" data-ajax-success="onSuccess" data-ajax-failure="onFail">
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <label class="" asp-for="@(Model.ItemId)">Items</label>
+            <select asp-for="@Model.ItemId" class="form-control" asp-items="@(new SelectList(ViewBag.ItemsList , "Id" , "ItemName"))">
+                <option value="">Choose</option>
+            </select>
+            <span asp-validation-for="@Model.ItemId" class="text-danger" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="" asp-for="@Model.UnitId">Unit</label>
+            <select asp-for="@Model.UnitId" class="form-control" asp-items="@(new SelectList(ViewBag.UnitList , "Id" , "UnitName"))">
+                <option value="">Choose</option>
+            </select>
+            <span asp-validation-for="@Model.UnitId" class="text-danger" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="" asp-for="@Model.Price">Price</label>
+            <input type="text" asp-for="@Model.Price" class="form-control" value="@Model.Price" placeholder="Price" />
+            <span asp-validation-for="@Model.Price" class="text-danger" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="" asp-for="@Model.ItemsQty">Quantity</label>
+            <input type="text" asp-for="@Model.ItemsQty" class="form-control" value="@Model.ItemsQty" placeholder="Quntity" />
+            <span asp-validation-for="@Model.ItemsQty" class="text-danger" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="" asp-for="@Model.Total">Total</label>
+            <input type="text" asp-for="@Model.Total" class="form-control" value="@Model.Total" placeholder="Total" />
+            <span asp-validation-for="@Model.Total" class="text-danger" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="" asp-for="@Model.Discount">Discount</label>
+            <input type="text" asp-for="@Model.Discount" class="form-control" value="@Model.Discount" placeholder="Discount" />
+            <span asp-validation-for="@Model.Discount" class="text-danger" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="" asp-for="@Model.NetPrice">Net</label>
+            <input type="text" asp-for="@Model.NetPrice" class="form-control" value="@Model.NetPrice" placeholder="Net Price" />
+            <span asp-validation-for="@Model.NetPrice" class="text-danger" />
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <button class="btn-sm btn-primary" type="submit" data-save="modal">Add Item</button>
+        </div>
+    </div>
+
+
+</form>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
